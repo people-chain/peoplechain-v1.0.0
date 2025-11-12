@@ -1,0 +1,29 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://peoplechain.dev/schemas/block_full.json",
+  "title": "Block",
+  "type": "object",
+  "required": ["header", "tx_ids", "signatures"],
+  "properties": {
+    "header": { "$ref": "block_header.json" },
+    "tx_ids": {
+      "type": "array",
+      "items": { "type": "string" },
+      "minItems": 0
+    },
+    "signatures": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["signer", "signature"],
+        "properties": {
+          "signer": { "type": "string" },
+          "signature": { "type": "string" }
+        },
+        "additionalProperties": false
+      },
+      "minItems": 0
+    }
+  },
+  "additionalProperties": false
+}

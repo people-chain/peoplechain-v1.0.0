@@ -1,0 +1,36 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://peoplechain.dev/schemas/transaction.json",
+  "title": "Transaction",
+  "type": "object",
+  "required": [
+    "tx_id",
+    "from",
+    "to",
+    "nonce",
+    "timestamp_ms",
+    "payload",
+    "signature"
+  ],
+  "properties": {
+    "tx_id": { "type": "string" },
+    "from": { "type": "string" },
+    "to": { "type": "string" },
+    "nonce": { "type": "integer", "minimum": 0 },
+    "timestamp_ms": { "type": "integer", "minimum": 0 },
+    "payload": {
+      "type": "object",
+      "required": ["type"],
+      "properties": {
+        "type": { "type": "string", "enum": ["text", "media", "file"] },
+        "text": { "type": "string" },
+        "chunk_ref": { "type": "string" },
+        "mime": { "type": "string" },
+        "size_bytes": { "type": "integer", "minimum": 0 }
+      },
+      "additionalProperties": false
+    },
+    "signature": { "type": "string" }
+  },
+  "additionalProperties": false
+}

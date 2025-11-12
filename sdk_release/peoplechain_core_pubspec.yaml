@@ -1,0 +1,27 @@
+name: peoplechain_core
+description: On-device, decentralized chat ledger (PeopleChain) for Flutter/Dart apps.
+version: 0.1.0
+homepage: https://example.com/peoplechain
+publish_to: none
+
+environment:
+  sdk: ">=3.0.0 <4.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  crypto: ^3.0.3
+  pointycastle: ^3.9.1
+  isar: ^3.1.0+1
+  isar_flutter_libs: ^3.1.0+1
+  path_provider: ^2.1.4
+  flutter_webrtc: ^0.11.6
+  multicast_dns: ^0.3.2
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  lints: ^5.0.0
+
+flutter:
+  uses-material-design: false

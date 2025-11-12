@@ -1,0 +1,16 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://peoplechain.dev/schemas/chunk.json",
+  "title": "Chunk",
+  "type": "object",
+  "required": ["chunk_id", "type", "size_bytes", "hash"],
+  "properties": {
+    "chunk_id": { "type": "string" },
+    "type": { "type": "string", "enum": ["text", "media", "file"] },
+    "size_bytes": { "type": "integer", "minimum": 0 },
+    "hash": { "type": "string" },
+    "data_b64": { "type": "string" },
+    "mime": { "type": "string" }
+  },
+  "additionalProperties": false
+}

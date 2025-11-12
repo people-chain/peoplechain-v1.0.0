@@ -1,0 +1,14 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://peoplechain.dev/schemas/checkpoint.json",
+  "title": "Checkpoint",
+  "type": "object",
+  "required": ["height", "block_id", "state_root", "timestamp_ms"],
+  "properties": {
+    "height": { "type": "integer", "minimum": 0 },
+    "block_id": { "type": "string" },
+    "state_root": { "type": "string" },
+    "timestamp_ms": { "type": "integer", "minimum": 0 }
+  },
+  "additionalProperties": false
+}

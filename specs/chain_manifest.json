@@ -1,0 +1,41 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://peoplechain.dev/schemas/chain_manifest.json",
+  "title": "ChainManifest",
+  "type": "object",
+  "required": [
+    "chain_id",
+    "version",
+    "genesis_time",
+    "block_time_target_ms",
+    "max_block_size_bytes",
+    "hash_algorithm",
+    "encryption_algorithms",
+    "compression",
+    "consensus"
+  ],
+  "properties": {
+    "chain_id": { "type": "string", "minLength": 1 },
+    "version": { "type": "string", "minLength": 1 },
+    "genesis_time": { "type": "string", "format": "date-time" },
+    "block_time_target_ms": { "type": "integer", "minimum": 100 },
+    "max_block_size_bytes": { "type": "integer", "minimum": 1024 },
+    "hash_algorithm": { "type": "string", "enum": ["sha256", "blake3"] },
+    "encryption_algorithms": {
+      "type": "array",
+      "items": { "type": "string", "enum": ["xchacha20poly1305", "aes-gcm", "none"] },
+      "minItems": 1
+    },
+    "compression": { "type": "string", "enum": ["none", "zstd"] },
+    "consensus": {
+      "type": "object",
+      "required": ["type"],
+      "properties": {
+        "type": { "type": "string", "enum": ["pow", "pos", "poa", "dpos"] },
+        "params": { "type": "object", "additionalProperties": true }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}
