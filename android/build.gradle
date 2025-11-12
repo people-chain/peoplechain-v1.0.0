@@ -1,0 +1,99 @@
+buildscript {
+    repositories {
+        google()
+        mavenCentral()
+    }
+    dependencies {
+        // Align with settings.gradle plugins block
+        classpath 'com.android.tools.build:gradle:8.7.2'
+        classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:2.1.10'
+    }
+}
+
+allprojects {
+    repositories {
+        google()
+        mavenCentral()
+    }
+}
+
+rootProject.buildDir = "../build"
+subprojects {
+    tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).configureEach {
+        kotlinOptions {
+            jvmTarget = "17"
+        }
+    }
+
+    // Ensure all Kotlin modules (including plugins) use the same JVM toolchain (17)
+    plugins.withId("org.jetbrains.kotlin.android") {
+        def kotlinExt = project.extensions.findByName("kotlin")
+        if (kotlinExt != null && kotlinExt.respondsTo("jvmToolchain")) {
+            try {
+                kotlinExt.jvmToolchain(17)
+            } catch (ignored) {
+                // Older Kotlin Gradle plugin without jvmToolchain; options block above will still apply
+            }
+        }
+    }
+}
+ 
+subprojects {
+    afterEvaluate { project ->
+        if (project.plugins.hasPlugin("com.android.application") ||
+                project.plugins.hasPlugin("com.android.library")) {
+
+            project.android {
+                compileSdkVersion 35
+
+                // Java/Kotlin toolchain aligned with AGP 8.7.x and Kotlin 2.1.x
+                compileOptions {
+                    sourceCompatibility JavaVersion.VERSION_17
+                    targetCompatibility JavaVersion.VERSION_17
+                }
+
+                if (project.hasProperty("kotlinOptions")) {
+                    project.kotlinOptions {
+                        jvmTarget = "17"
+                    }
+                }
+            }
+        }
+
+        if (project.hasProperty('android')) {
+            project.android {
+                if (namespace == null) {
+                    namespace project.group
+                }
+            }
+        }
+    }
+}
+
+subprojects {
+    project.buildDir = "${rootProject.buildDir}/${project.name}"
+}
+
+subprojects {
+    project.evaluationDependsOn(":app")
+}
+
+tasks.register("clean", Delete) {
+    delete rootProject.buildDir
+}
+// Note: We rely on AGP + Gradle Toolchains to select JDK 17 automatically.
+// Do not override JavaCompile.javaCompiler here; AGP finalizes it and late changes cause failures.
+
+def keystoreProperties = new Properties()
+def keystorePropertiesFile = rootProject.file('key.properties')
+if (keystorePropertiesFile.exists()) {
+    keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+}
+
+gradle.projectsEvaluated {
+    tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).configureEach {
+        kotlinOptions {
+            jvmTarget = "17"
+        }
+    }
+}

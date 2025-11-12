@@ -1,0 +1,43 @@
+pluginManagement {
+    def flutterSdkPath = {
+        def properties = new Properties()
+        file("local.properties").withInputStream { properties.load(it) }
+        def flutterSdkPath = properties.getProperty("flutter.sdk")
+        assert flutterSdkPath != null, "flutter.sdk not set in local.properties"
+        return flutterSdkPath
+    }()
+
+    includeBuild("$flutterSdkPath/packages/flutter_tools/gradle")
+
+    repositories {
+        google()
+        mavenCentral()
+        gradlePluginPortal()
+    }
+    // Ensure all modules and transitive builds use the same Kotlin plugin version
+    resolutionStrategy {
+        eachPlugin {
+            if (requested.id.id == "org.jetbrains.kotlin.android") {
+                // Kotlin 2.1.x is required by newer Flutter/AGP and fixes K2 ICEs
+                useVersion("2.1.10")
+            }
+            if (requested.id.id == "org.jetbrains.kotlin.jvm") {
+                useVersion("2.1.10")
+            }
+        }
+    }
+    
+}
+
+plugins {
+    id "dev.flutter.flutter-plugin-loader" version "1.0.0"
+    // Upgrade AGP to match Flutter May 2025 toolchain and Kotlin 2.1.x
+    id "com.android.application" version "8.7.2" apply false
+    // START: FlutterFire Configuration
+    id "com.google.gms.google-services" version "4.4.2" apply false
+    // END: FlutterFire Configuration
+    // Align Kotlin plugin with AGP 8.7.x compatibility (use latest stable)
+    id "org.jetbrains.kotlin.android" version "2.1.10" apply false
+}
+
+include ":app"
