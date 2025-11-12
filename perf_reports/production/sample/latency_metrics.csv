@@ -1,0 +1,4 @@
+timestamp,case,from,to,bytes,latency_ms
+2025-11-11T00:00:00Z,text,A,B,24,120
+2025-11-11T00:00:01Z,text,B,A,24,118
+2025-11-11T00:00:02Z,media,A,B,204800,980
