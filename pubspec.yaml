@@ -1,0 +1,50 @@
+name: pocket_coach
+description: "A revolutionary on-device blockchain platform that empowers decentralized chat applications, storing all content securely and enabling global peer-to-peer communication without central servers."
+publish_to: "none"
+version: 1.0.0
+
+environment:
+  sdk: ^3.6.0
+
+dependencies:
+  markdown: ^7.0.0
+  http: ^1.0.0
+  flutter_background_service_android: ^6.0.0
+  flutter_background_service: ^5.0.0
+  permission_handler: ^12.0.0
+  nearby_connections: ^4.0.0
+  flutter_foreground_task: ^9.0.0
+  fl_chart: 0.68.0
+  flutter_blue_plus: ^2.0.0
+  flutter_webrtc: ^1.0.0
+  multicast_dns: 0.3.3
+  path_provider: ^2.0.0
+  test: ^1.0.0
+  json_serializable: ^6.0.0
+  build_runner: ^2.0.0
+  collection: ^1.0.0
+  uuid: any
+  isar_flutter_libs: ^3.1.0
+  isar: ^3.1.0
+  json_annotation: ^4.0.0
+  flutter_secure_storage: ^9.2.2
+  cryptography: ^2.0.0
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^1.0.8
+  google_fonts: ^6.1.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^5.0.0
+  flutter_launcher_icons: ^0.13.1
+
+flutter:
+  uses-material-design: true
+
+flutter_launcher_icons:
+  android: true
+  ios: true
+  image_path: assets/icons/dreamflow_icon.jpg
+  remove_alpha_ios: true
