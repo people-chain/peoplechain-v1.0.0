@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>PeopleChain • API Explorer</title>
+    <style>
+      :root { color-scheme: light dark; }
+      body { font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, 'Helvetica Neue', Arial; margin:0; background:#0b0d10; color:#e8eaed; }
+      header { padding:12px 16px; background:#111419; position:sticky; top:0; }
+      h1 { font-size:16px; margin:0; }
+      .grid { display:grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap:12px; padding:12px; }
+      .card { background:#111419; border:1px solid rgba(255,255,255,.06); border-radius:12px; padding:12px; }
+      input, select { width: 100%; padding:8px; border-radius:8px; border:1px solid rgba(255,255,255,.12); background:#0f1217; color:#e8eaed; }
+      button { padding:8px 12px; background:#2556d0; color:white; border:none; border-radius:999px; cursor:pointer; }
+      pre { background:#0f1217; padding:12px; border-radius:8px; overflow:auto; }
+      .row { display:flex; gap:8px; align-items:center; }
+    </style>
+  </head>
+  <body>
+    <header><h1>PeopleChain • API Explorer</h1></header>
+    <div class="grid">
+      <div class="card">
+        <div class="row">
+          <select id="endpoint">
+            <option value="/api/info">GET /api/info</option>
+            <option value="/api/tip">GET /api/tip</option>
+            <option value="/api/peers?limit=50">GET /api/peers?limit=50</option>
+            <option value="/api/blocks?from=tip&count=10">GET /api/blocks?from=tip&count=10</option>
+          </select>
+          <button onclick="callApi()">Send</button>
+        </div>
+        <pre id="out">Response will appear here…</pre>
+      </div>
+      <div class="card">
+        <div class="row">
+          <input id="blockId" placeholder="Block ID or Height" />
+          <button onclick="getBlock()">Get Block</button>
+        </div>
+        <div class="row" style="margin-top:8px;">
+          <input id="txId" placeholder="Transaction ID" />
+          <button onclick="getTx()">Get Tx</button>
+        </div>
+        <pre id="out2">Response will appear here…</pre>
+      </div>
+      <div class="card">
+        <div class="row">
+          <button onclick="connectWs()">Connect WebSocket</button>
+          <button onclick="sendWs()">Send get_info</button>
+        </div>
+        <pre id="out3">WebSocket log…</pre>
+      </div>
+    </div>
+    <script>
+      async function callApi() {
+        const ep = document.getElementById('endpoint').value;
+        const res = await fetch(ep);
+        const j = await res.text();
+        document.getElementById('out').textContent = j;
+      }
+      async function getBlock() {
+        const q = document.getElementById('blockId').value.trim();
+        if (!q) return;
+        const h = parseInt(q, 10);
+        let out;
+        if (!isNaN(h)) {
+          out = await (await fetch('/api/blocks?from='+h+'&count=1')).text();
+        } else {
+          out = await (await fetch('/api/block/'+q)).text();
+        }
+        document.getElementById('out2').textContent = out;
+      }
+      async function getTx() {
+        const q = document.getElementById('txId').value.trim();
+        if (!q) return;
+        const out = await (await fetch('/api/tx/'+q)).text();
+        document.getElementById('out2').textContent = out;
+      }
+      let ws;
+      function connectWs() {
+        if (ws) try { ws.close(); } catch(e) {}
+        ws = new WebSocket((location.protocol==='https:'?'wss://':'ws://')+location.host+'/ws');
+        ws.addEventListener('message', (e) => {
+          document.getElementById('out3').textContent += '\n' + e.data;
+        });
+      }
+      function sendWs() {
+        if (!ws) return;
+        ws.send(JSON.stringify({type:'get_info'}));
+      }
+    </script>
+  </body>
+  </html>
