@@ -1,0 +1,25 @@
+%% Mermaid diagram: Sync handshake and delta exchange
+sequenceDiagram
+  participant A as Node A
+  participant B as Node B
+  participant TA as Transport A
+  participant TB as Transport B
+
+  A->>TA: open()
+  B->>TB: open()
+  TA-->>TB: connect (WebRTC DC)
+  TB-->>TA: open ack
+
+  A->>B: SyncMessage(handshake, head=height/hash)
+  B->>A: SyncMessage(handshake_ack, head=height/hash)
+
+  alt A behind
+    B->>A: SyncMessage(blocks_delta)
+    A->>A: validate blocks/txs, commit
+  else B behind
+    A->>B: SyncMessage(blocks_delta)
+    B->>B: validate blocks/txs, commit
+  end
+
+  A-->>B: SyncMessage(done)
+  B-->>A: SyncMessage(done)

@@ -1,0 +1,41 @@
+%% Mermaid diagram: PeopleChain architecture
+flowchart LR
+  subgraph App[Flutter App]
+    UI[Chat UI / Screens]
+    SDK[PeopleChainNode SDK]
+  end
+
+  subgraph Core[peoplechain_core]
+    Crypto[CryptoManager]
+    Keys[KeyStorage]
+    DB[IsarMessageDb]
+    Codec[ChunkCodec]
+    TxB[TxBuilder]
+    Sync[SyncEngine]
+    P2P[P2P Manager]
+  end
+
+  subgraph Storage[On-device Storage]
+    Isar[(Isar DB)]
+    Secure[Platform Secure Storage]
+  end
+
+  subgraph Network[P2P Network]
+    WebRTC[WebRTC DataChannel]
+    mDNS[mDNS Discovery]
+  end
+
+  UI --> SDK
+  SDK --> Crypto
+  SDK --> Keys
+  SDK --> DB
+  SDK --> TxB
+  SDK --> Sync
+  SDK --> P2P
+
+  DB <--> Isar
+  Keys <--> Secure
+
+  P2P --> WebRTC
+  P2P --> mDNS
+  Sync <--> P2P

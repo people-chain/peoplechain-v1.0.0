@@ -1,0 +1,19 @@
+[Unit]
+Description=PeopleChain Node Service
+After=network.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=peoplechain
+Group=peoplechain
+ExecStart=/usr/bin/dart run pocket_coach:peoplechain_node
+Restart=always
+RestartSec=5
+Environment=RUST_LOG=info
+WorkingDirectory=/var/lib/peoplechain
+StandardOutput=append:/var/log/peoplechain/node.log
+StandardError=append:/var/log/peoplechain/node.log
+
+[Install]
+WantedBy=multi-user.target

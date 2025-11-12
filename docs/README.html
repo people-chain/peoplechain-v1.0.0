@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>PeopleChain</title>
+  <style>
+    body { font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif; margin: 24px; line-height: 1.55; color: #222; }
+    h1, h2, h3 { color: #2d1b4f; }
+    code, pre { background: #f6f4fb; padding: 2px 6px; border-radius: 6px; }
+    pre { padding: 12px; overflow: auto; }
+    a { color: #684F8E; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    .toc { background: #faf8ff; border: 1px solid #e7e1f5; padding: 12px; border-radius: 10px; }
+    .pill { display: inline-block; padding: 2px 8px; border-radius: 999px; background: #eae0ff; color: #23105F; font-size: 12px; }
+  </style>
+  <meta name="description" content="PeopleChain — on-device, peer-to-peer ledger and messaging for Flutter." />
+  <meta property="og:title" content="PeopleChain" />
+  <meta property="og:description" content="On-device, peer-to-peer ledger and messaging for Flutter." />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="https://raw.githubusercontent.com/peoplechain/peoplechain/main/web/icons/Icon-512.png" />
+  <meta name="theme-color" content="#684F8E" />
+  
+</head>
+<body>
+  <h1>PeopleChain <span class="pill">Android</span> <span class="pill">Web</span></h1>
+  <p>PeopleChain is an on-device, peer-to-peer ledger designed for decentralized chat and lightweight data exchange. It runs entirely on end-user devices with no required backend, and provides a friendly Flutter SDK.</p>
+
+  <div class="toc">
+    <strong>Contents</strong>
+    <ul>
+      <li><a href="#concept">1. Concept & Purpose</a></li>
+      <li><a href="#architecture">2. Architecture & Workflow</a></li>
+      <li><a href="#consensus">3. Election & Consensus</a></li>
+      <li><a href="#sync">4. Synchronization & Propagation</a></li>
+      <li><a href="#integration">5. Integration Options</a></li>
+      <li><a href="#guides">6. Guides</a></li>
+      <li><a href="#api">7. API & SDK Docs</a></li>
+      <li><a href="#getting-started">7. Getting Started (Production)</a></li>
+    </ul>
+  </div>
+
+  <h2 id="concept">1. Concept & Purpose</h2>
+  <p>Provide decentralized chat and data persistence without servers. Store data locally, exchange over encrypted data channels, and converge nodes with a simple deterministic chain rule.</p>
+
+  <h2 id="architecture">2. Architecture & Workflow</h2>
+  <ul>
+    <li><strong>SDK facade</strong>: <code>PeopleChainNode</code> for app integration</li>
+    <li><strong>Crypto & keys</strong>: ed25519/x25519 from a master seed in secure storage</li>
+    <li><strong>Storage</strong>: Isar on Android; in-memory mode on Web</li>
+    <li><strong>Transport</strong>: WebRTC data channel; discovery via P2P manager</li>
+    <li><strong>Sync</strong>: handshake + delta blocks/txs</li>
+  </ul>
+  <p>See <code>docs/Overview.md</code> and Mermaid diagrams under <code>docs/diagrams</code>.</p>
+
+  <h2 id="consensus">3. Election & Consensus</h2>
+  <ul>
+    <li>Prefer higher height</li>
+    <li>Tie-break by lexicographically larger blockId</li>
+    <li>Validate prev linkage and recomputed tx merkle root</li>
+    <li>Optional <code>ConsensusHook</code> for app-specific validation</li>
+  </ul>
+
+  <h2 id="sync">4. Synchronization & Propagation</h2>
+  <ul>
+    <li>Exchange <code>hello</code>/<code>hello_ack</code> with tip info</li>
+    <li>Request missing ranges via <code>get_blocks</code>; fetch missing tx via <code>get_txs</code></li>
+    <li>Announce new items with <code>inv_txs</code> and <code>inv_blocks</code></li>
+  </ul>
+
+  <h2 id="integration">5. Integration Options</h2>
+  <ul>
+    <li>Embed the Flutter SDK (<code>peoplechain_core</code>) in your app</li>
+    <li>On Web, toggle the <em>API</em> tab in the Testing Dashboard to expose a <code>postMessage</code> API</li>
+  </ul>
+
+  <h2 id="guides">6. Guides</h2>
+  <ul>
+    <li><a href="DeveloperGuide.md">Developer Guide</a> — building, environment, architecture, release checklist</li>
+    <li><a href="UserGuide.md">User Guide</a> — pairing, messaging, explorer</li>
+    <li><a href="IntegrationGuide.md">Integration Guide</a> — SDK APIs, Web bridge, security</li>
+    <li><a href="USAGE.md">SDK Usage</a> and <a href="API.md">API Reference</a></li>
+    <li><a href="SECURITY.md">Security</a> and <a href="PEN_TEST_REPORT.md">Pen Test Summary</a></li>
+  </ul>
+
+  <h2 id="api">7. API & SDK Docs</h2>
+  <ul>
+    <li><a href="../api/REFERENCE.md">/api/REFERENCE.md</a> — SDK API reference</li>
+    <li><a href="../api/SDK_GUIDE.md">/api/SDK_GUIDE.md</a> — SDK integration guide</li>
+    <li><a href="../api/EXPLORER.html">/api/EXPLORER.html</a> — Local API Explorer (served by Monitor Server)</li>
+  </ul>
+
+  <h2 id="getting-started">7. Getting Started with PeopleChain (Production)</h2>
+  <h3>Web deployment</h3>
+  <ol>
+    <li>In Dreamflow, click <strong>Publish</strong> and choose <strong>Web</strong>. This builds and deploys the current project. Branding is already updated in <code>web/</code>.</li>
+    <li>Alternatively, download the code and run <code>flutter build web --release</code>. Host <code>build/web</code> on your static hosting.</li>
+  </ol>
+
+  <h3>Android release</h3>
+  <ol>
+    <li>In Dreamflow, use <strong>Publish</strong> → <strong>Google Play</strong> for store deployment.</li>
+    <li>Or locally: set your <code>applicationId</code> in <code>android/app/build.gradle</code>, configure signing, then run <code>flutter build appbundle --release</code>.</li>
+  </ol>
+
+  <h3>Connecting live nodes</h3>
+  <ol>
+    <li>Open the app on two devices/browsers. From the home screen’s WebRTC panel, click <strong>Create Offer</strong> on device A.</li>
+    <li>On device B, paste the Offer into <strong>Accept Offer</strong>. Copy the generated Answer back to A and use <strong>Accept Answer</strong>.</li>
+    <li>Once the channel shows <em>Open</em>, exchange messages. Open the beaker icon to inspect <em>Peers</em>, <em>Chain</em>, and <em>Explorer</em> in real time.</li>
+  </ol>
+
+  <h3>Notes about optional backends</h3>
+  <p>PeopleChain requires no backend. If you later want Firebase or Supabase, use Dreamflow’s <strong>Firebase</strong> or <strong>Supabase</strong> panel to connect a project and follow the guided setup. Avoid CLI configuration inside Dreamflow.</p>
+
+  <hr />
+  <p><small>© PeopleChain — MIT licensed where applicable. See repository for details.</small></p>
+</body>
+</html>

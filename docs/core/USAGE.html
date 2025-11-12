@@ -1,0 +1,19 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<style>body{font-family:system-ui,Segoe UI,Roboto,Ubuntu,Arial;max-width:860px;margin:40px auto;padding:0 16px;line-height:1.6;background:#0b0d10;color:#e8eaed} pre{background:#0f1217;padding:12px;border-radius:8px;overflow:auto} code{font-family:ui-monospace,Menlo,Consolas,monospace}</style>
+</head><body>
+<h1>PeopleChain Core • USAGE</h1>
+<p>The Core Node embeds the local chain, message/chunk store, and sync engine. Access it via PeopleChainNode:</p>
+<pre><code class="language-dart">final node = PeopleChainNode();
+await node.startNodeWithProgress(const NodeConfig(alias: 'device-1'));
+await node.enableAutoMode();
+</code></pre>
+<h3>Send a message</h3>
+<pre><code class="language-dart">final res = await node.sendMessage(toPubKey: '&lt;recipient-ed25519&gt;', text: 'hello');
+</code></pre>
+<h3>Query chain</h3>
+<pre><code class="language-dart">final tip = await node.tipHeight();
+final block = await node.getBlockByHeight(tip);
+</code></pre>
+<p>See also: <a href="../sdk/USAGE.md">../sdk/USAGE.md</a></p>
+</body></html>
